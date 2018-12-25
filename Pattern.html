@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<style type="text/css">
+	tr{
+		padding : 5px;
+	}
+	
+	td{
+		padding : 5px;
+	}
+	
+	button{
+		margin : 5px;
+	}
+	
+</style>
+<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+<script type="text/javascript" language="javascript">
+	function printTrianglePattern()
+	{
+		var n = $("#txtNumber").val();
+		
+		var pattern = '';
+		for (var i = 1; i <= n; i++)
+        {
+			pattern += "<tr>";
+            for (var j = 1; j <= i; j++)
+			{
+				var sum = j;
+				for (var x = 0; x < i - j; x++)
+				{
+					sum += n - x;
+				}
+				pattern += "<td>" +sum + "</td>";
+			}
+			pattern += "</tr>";
+		}
+		$("#patternDisplay").html(pattern);
+	}
+	
+	function printSquarePattern()
+	{
+		var n = $("#txtNumber").val();
+		var pattern = '';
+		
+		GetSquarePattern(false);		
+	}
+	
+	function printHollowSquarePattern()
+	{
+		var n = $("#txtNumber").val();
+		var pattern = '';
+		
+		GetSquarePattern(true);		
+	}
+	
+	function GetSquarePattern(isHollow)
+	{
+		var n = parseInt(document.getElementById("txtNumber").value);
+		var loopCnt = isHollow ? parseInt(1) : parseInt((n + 1) / 2);
+		var pattern = '';
+		for(var i=1; i<=n; i++)
+		{
+			pattern += "<tr>";
+			for(var j=1; j<=n; j++)
+			{
+				// get the loop cnt based on the row no.; if it is first/nth row consider loopCnt as 1
+				var sum = 1;
+				var patternSum ;
+				var numRchd = false;
+				for (var l = 1; numRchd == false && l <= loopCnt; l++)
+				{
+					var rIlow = l, rIhigh = n - (l - 1);
+					var cIlow = l, cIhigh = n - (l - 1);
+					var rI,cI;
+					
+					// first fill low row i.e., row = 0; col ++
+					for (var col = cIlow; numRchd == false && col <= cIhigh; col++) {
+						rI = rIlow, cI = col;
+						if (rI == i && cI == j)
+						{
+							numRchd = true;                                
+						}
+						else { sum = sum + 1; }
+					}
+
+					// fill the last column i.e., row++; colHigh
+					for (var row = rIlow + 1; numRchd==false && row <= rIhigh; row++) {
+						rI = row, cI = cIhigh;
+						if (rI == i && cI == j) {
+							numRchd = true;
+						}
+						else { sum = sum + 1; }
+					}
+
+					// fill the last row i.e., rowHigh; col --
+					for (var col = cIhigh - 1; numRchd == false && col >= cIlow; col--) {
+						rI = rIhigh, cI = col;
+						if (rI == i && cI == j) {
+							numRchd = true;
+						}
+						else { sum = sum + 1; }
+					}
+
+					// fill the first col i.e., row--; colLow
+					for (var row = rIhigh - 1; numRchd == false && row >= rIlow + 1; row--) {
+						rI = row, cI = cIlow;
+						if (rI == i && cI == j) {
+							numRchd = true;
+						}
+						else { sum = sum + 1; }
+					}
+				   
+				}
+				if(numRchd)
+					patternSum = sum;
+				else
+					patternSum = "&nbsp;"
+					
+				pattern += "<td>" + patternSum + "</td>";
+			}
+			pattern += "</tr>";
+		}
+		$("#patternDisplay").html(pattern);
+	}
+	
+	$(document).ready(function() {
+		$("#btnTriangle").click(function(){
+			printTrianglePattern();
+		});
+		
+		$("#btnSquare").click(function(){
+			printSquarePattern();
+		});
+		
+		$("#btnHollow").click(function(){
+			printHollowSquarePattern();
+		});
+	
+	});
+   
+   
+</script>
+</head>
+<body>
+
+	<div>
+		<label>Enter a number: </label>
+		<input type = "text" id="txtNumber" />
+	</div>
+	<div id="divButtons">
+		<button id="btnTriangle"> Get Triangle Pattern </button>
+		<button id="btnSquare"> Get Square Pattern </button>
+		<button id="btnHollow"> Get Hollow Square Pattern </button>
+	</div>
+	<table id="patternDisplay"> </table>
+</body>
+</html>
